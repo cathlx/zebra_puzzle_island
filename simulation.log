@@ -1,0 +1,275 @@
+Initialized island with agents:
+Russian lives in Red house 1, drinks Water, smokes Marlboro, has a Dogswaps house with probabilty 1.0, swaps pet with probability 1.0
+English lives in Blue house 2, drinks Beer, smokes Pall Mall, has a Catswaps house with probabilty 1.0, swaps pet with probability 1.0
+Chinese lives in Yellow house 3, drinks Juice, smokes Dunhill, has a Zebraswaps house with probabilty 1.0, swaps pet with probability 1.0
+German lives in Green house 4, drinks Whiskey, smokes Kent, has a Fishswaps house with probabilty 1.0, swaps pet with probability 1.0
+French lives in White house 5, drinks Vodka, smokes Camel, has a Hamsterswaps house with probabilty 1.0, swaps pet with probability 1.0
+American lives in Black house 6, drinks Wine, smokes Parlament, has a Bearswaps house with probabilty 1.0, swaps pet with probability 1.0
+
+DAY 1 BEGAN
+DAY 1: Person 1 stays at house 1
+DAY 1: Person 2 stays at house 2
+DAY 1: Person 3 stays at house 3
+DAY 1: Person 4 stays at house 4
+DAY 1: Person 5 stays at house 5
+DAY 1: Person 6 stays at house 6
+DAY 1: people [1] at house 1
+DAY 1: people [2] at house 2
+DAY 1: people [3] at house 3
+DAY 1: people [4] at house 4
+DAY 1: people [5] at house 5
+DAY 1: people [6] at house 6
+BY THE END OF DAY 1
+Person 1 staying at house 1
+Person 2 staying at house 2
+Person 3 staying at house 3
+Person 4 staying at house 4
+Person 5 staying at house 5
+Person 6 staying at house 6
+DAY 1 ENDED
+
+DAY 2: Pending visit added: arrival: 4, person: 2, house: 1
+DAY 2: Pending visit added: arrival: 4, person: 5, house: 6
+DAY 2 BEGAN
+DAY 2: Person 1 stays at house 1
+DAY 2: Person 3 stays at house 3
+DAY 2: Person 4 stays at house 4
+DAY 2: Person 6 stays at house 6
+DAY 2: people [1] at house 1
+DAY 2: people [] at house 2
+DAY 2: people [3] at house 3
+DAY 2: people [4] at house 4
+DAY 2: people [] at house 5
+DAY 2: people [6] at house 6
+BY THE END OF DAY 2
+Person 1 staying at house 1
+Person 2 traveling from house 2 to house 1
+Person 3 staying at house 3
+Person 4 staying at house 4
+Person 5 traveling from house 5 to house 6
+Person 6 staying at house 6
+DAY 2 ENDED
+
+DAY 3: Pending visit added: arrival: 5, person: 3, house: 4
+DAY 3: Pending visit added: arrival: 5, person: 6, house: 5
+DAY 3 BEGAN
+DAY 3: Person 1 stays at house 1
+DAY 3: Person 4 stays at house 4
+DAY 3: people [1] at house 1
+DAY 3: people [] at house 2
+DAY 3: people [] at house 3
+DAY 3: people [4] at house 4
+DAY 3: people [] at house 5
+DAY 3: people [] at house 6
+BY THE END OF DAY 3
+Person 1 staying at house 1
+Person 2 traveling from house 2 to house 1
+Person 3 traveling from house 3 to house 4
+Person 4 staying at house 4
+Person 5 traveling from house 5 to house 6
+Person 6 traveling from house 6 to house 5
+DAY 3 ENDED
+
+DAY 4 BEGAN
+DAY 4: Person 1 stays at house 1
+DAY 4: Person 4 stays at house 4
+DAY 4: Person 2 came to house 1
+DAY 4: Person 5 came to house 6
+DAY 4: people [1, 2] at house 1
+DAY 4: Processing house 1
+DAY 4: Pet swappers at house 1: [1, 2]
+DAY 4: House swappers at house 1: [1, 2]
+DAY 4: house swap between (0, 1, None)
+DAY 4: pet swap between (0, 1, None)
+DAY 4: people [] at house 2
+DAY 4: people [] at house 3
+DAY 4: people [4] at house 4
+DAY 4: people [] at house 5
+DAY 4: people [5] at house 6
+BY THE END OF DAY 4
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 traveling from house 3 to house 4
+Person 4 staying at house 4
+Person 5 staying at house 6
+Person 6 traveling from house 6 to house 5
+DAY 4 ENDED
+
+DAY 5: Pending visit added: arrival: 7, person: 5, house: 5
+DAY 5 BEGAN
+DAY 5: Person 1 stays at house 1
+DAY 5: Person 2 stays at house 1
+DAY 5: Person 4 stays at house 4
+DAY 5: Person 3 came to house 4
+DAY 5: Person 6 came to house 5
+DAY 5: people [1, 2] at house 1
+DAY 5: Processing house 1
+DAY 5: Pet swappers at house 1: [1, 2]
+DAY 5: House swappers at house 1: [1, 2]
+DAY 5: house swap between (0, 1, None)
+DAY 5: pet swap between (0, 1, None)
+DAY 5: people [] at house 2
+DAY 5: people [] at house 3
+DAY 5: people [4, 3] at house 4
+DAY 5: Processing house 4
+DAY 5: Pet swappers at house 4: [4, 3]
+DAY 5: House swappers at house 4: [4, 3]
+DAY 5: house swap between (3, 2, None)
+DAY 5: pet swap between (3, 2, None)
+DAY 5: people [6] at house 5
+DAY 5: people [] at house 6
+BY THE END OF DAY 5
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 staying at house 4
+Person 4 staying at house 4
+Person 5 traveling from house 6 to house 5
+Person 6 staying at house 5
+DAY 5 ENDED
+
+DAY 6 BEGAN
+DAY 6: Person 1 stays at house 1
+DAY 6: Person 2 stays at house 1
+DAY 6: Person 3 stays at house 4
+DAY 6: Person 4 stays at house 4
+DAY 6: Person 6 stays at house 5
+DAY 6: people [1, 2] at house 1
+DAY 6: Processing house 1
+DAY 6: Pet swappers at house 1: [1, 2]
+DAY 6: House swappers at house 1: [1, 2]
+DAY 6: house swap between (0, 1, None)
+DAY 6: pet swap between (0, 1, None)
+DAY 6: people [] at house 2
+DAY 6: people [] at house 3
+DAY 6: people [3, 4] at house 4
+DAY 6: Processing house 4
+DAY 6: Pet swappers at house 4: [3, 4]
+DAY 6: House swappers at house 4: [3, 4]
+DAY 6: house swap between (2, 3, None)
+DAY 6: pet swap between (2, 3, None)
+DAY 6: people [6] at house 5
+DAY 6: people [] at house 6
+BY THE END OF DAY 6
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 staying at house 4
+Person 4 staying at house 4
+Person 5 traveling from house 6 to house 5
+Person 6 staying at house 5
+DAY 6 ENDED
+
+DAY 7 BEGAN
+DAY 7: Person 1 stays at house 1
+DAY 7: Person 2 stays at house 1
+DAY 7: Person 3 stays at house 4
+DAY 7: Person 4 stays at house 4
+DAY 7: Person 6 stays at house 5
+DAY 7: Person 5 came to house 5
+DAY 7: people [1, 2] at house 1
+DAY 7: Processing house 1
+DAY 7: Pet swappers at house 1: [1, 2]
+DAY 7: House swappers at house 1: [1, 2]
+DAY 7: house swap between (0, 1, None)
+DAY 7: pet swap between (0, 1, None)
+DAY 7: people [] at house 2
+DAY 7: people [] at house 3
+DAY 7: people [3, 4] at house 4
+DAY 7: Processing house 4
+DAY 7: Pet swappers at house 4: [3, 4]
+DAY 7: House swappers at house 4: [3, 4]
+DAY 7: house swap between (2, 3, None)
+DAY 7: pet swap between (2, 3, None)
+DAY 7: people [6, 5] at house 5
+DAY 7: Processing house 5
+DAY 7: Pet swappers at house 5: [6, 5]
+DAY 7: House swappers at house 5: [6, 5]
+DAY 7: house swap between (5, 4, None)
+DAY 7: pet swap between (5, 4, None)
+DAY 7: people [] at house 6
+BY THE END OF DAY 7
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 staying at house 4
+Person 4 staying at house 4
+Person 5 staying at house 5
+Person 6 staying at house 5
+DAY 7 ENDED
+
+DAY 8: Pending visit added: arrival: 10, person: 3, house: 5
+DAY 8: Pending visit added: arrival: 10, person: 6, house: 6
+DAY 8 BEGAN
+DAY 8: Person 1 stays at house 1
+DAY 8: Person 2 stays at house 1
+DAY 8: Person 4 stays at house 4
+DAY 8: Person 5 stays at house 5
+DAY 8: people [1, 2] at house 1
+DAY 8: Processing house 1
+DAY 8: Pet swappers at house 1: [1, 2]
+DAY 8: House swappers at house 1: [1, 2]
+DAY 8: house swap between (0, 1, None)
+DAY 8: pet swap between (0, 1, None)
+DAY 8: people [] at house 2
+DAY 8: people [] at house 3
+DAY 8: people [4] at house 4
+DAY 8: people [5] at house 5
+DAY 8: people [] at house 6
+BY THE END OF DAY 8
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 traveling from house 4 to house 5
+Person 4 staying at house 4
+Person 5 staying at house 5
+Person 6 traveling from house 5 to house 6
+DAY 8 ENDED
+
+DAY 9: Pending visit added: arrival: 11, person: 5, house: 6
+DAY 9 BEGAN
+DAY 9: Person 1 stays at house 1
+DAY 9: Person 2 stays at house 1
+DAY 9: Person 4 stays at house 4
+DAY 9: people [1, 2] at house 1
+DAY 9: Processing house 1
+DAY 9: Pet swappers at house 1: [1, 2]
+DAY 9: House swappers at house 1: [1, 2]
+DAY 9: house swap between (0, 1, None)
+DAY 9: pet swap between (0, 1, None)
+DAY 9: people [] at house 2
+DAY 9: people [] at house 3
+DAY 9: people [4] at house 4
+DAY 9: people [] at house 5
+DAY 9: people [] at house 6
+BY THE END OF DAY 9
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 traveling from house 4 to house 5
+Person 4 staying at house 4
+Person 5 traveling from house 5 to house 6
+Person 6 traveling from house 5 to house 6
+DAY 9 ENDED
+
+DAY 10 BEGAN
+DAY 10: Person 1 stays at house 1
+DAY 10: Person 2 stays at house 1
+DAY 10: Person 4 stays at house 4
+DAY 10: Person 3 came to house 5
+DAY 10: Person 6 came to house 6
+DAY 10: people [1, 2] at house 1
+DAY 10: Processing house 1
+DAY 10: Pet swappers at house 1: [1, 2]
+DAY 10: House swappers at house 1: [1, 2]
+DAY 10: house swap between (0, 1, None)
+DAY 10: pet swap between (0, 1, None)
+DAY 10: people [] at house 2
+DAY 10: people [] at house 3
+DAY 10: people [4] at house 4
+DAY 10: people [3] at house 5
+DAY 10: people [6] at house 6
+BY THE END OF DAY 10
+Person 1 staying at house 1
+Person 2 staying at house 1
+Person 3 staying at house 5
+Person 4 staying at house 4
+Person 5 traveling from house 5 to house 6
+Person 6 staying at house 6
+DAY 10 ENDED
+
