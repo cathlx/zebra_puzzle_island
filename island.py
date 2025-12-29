@@ -1,228 +1,164 @@
 import heapq
-import logging 
 import numpy as np 
 import random
+
+from typing import Generator
 
 from agent import Agent
 from utils.schemas import * 
 
-logging.basicConfig(
-    level=logging.INFO,  
-    format='%(message)s', 
-    filename='simulation.log',
-)
-
 class Island:
-    def __init__(self, agent_states: list[Agent], distance_matrix: np.ndarray) -> None:
-        self.agent_states = agent_states # at i pos person with id i-1
-        self.house_processed = [False] * 6 # whether the house has been processed during the day
-        self.facts: list[Fact] = [] 
-        self.timestamp = 1 # current day 
+    def __init__(self, agents: list[Agent], distance_matrix: np.ndarray) -> None:
+        self.agents = agents # at i pos person with id i-1
+        self.num_people = len(agents)
         self.distance_matrix = distance_matrix
-        self.pending_visits: list[PendingVisit] = [] # heap
 
-        logging.info('Initialized island with agents:')
-        for agent in self.agent_states:
-            logging.info(str(agent))
-        logging.info('')
+        self.facts: list[Fact] = [] 
+        self.timestamp = 0 # current day 
+        self.trips: list[Trip] = [] # heap
 
-    # def log(self, ):
-        # logging.info(f'DAY {self.timestamp}: ')
+        # num of known facts
+        self.awareness = []
+        self.agent_awareness = [[] for _ in range(len(agents))]
 
     def __getitem__(self, idx: int) -> Agent:
-        return self.agent_states[idx]
-        
-    def print_facts(self):
-        for fact in self.facts:
-            print(fact)
-
+        return self.agents[idx]
+    
     def add_facts(self, *facts: Fact) -> None:
         for fact in facts:
             self.facts.append(fact)
+        
+    def print_facts(self, filepath: str | None = None) -> None:
+        if filepath:
+            with open(filepath, 'w') as file:
+                for fact in self.facts:
+                    file.write(fact)
+        else:
+            for fact in self.facts:
+                print(fact)
+
+    def print_facts_for_log(self, filepath: str | None = None) -> None:
+        for fact in self.facts:
+            print('_'.join(fact.type.value.split()), end=' ')
+            match fact.type:
+                case ActionType.START_TRIP:
+                    print(fact.actors, *fact.metadata.values())
+                case ActionType.END_TRIP:
+                    print(fact.actors, *fact.metadata.values())
+                case ActionType.MEETING:
+                    print(fact.timestamp, fact.metadata['house_at'], *fact.actors)
+                case ActionType.HOUSE_SWAP:
+                    print(fact.timestamp, *fact.metadata.values())
+                case ActionType.PET_SWAP:
+                    print(fact.timestamp, *fact.metadata.values())
+                case ActionType.INFORMATION_EXCHANGE:
+                    continue
     
     def plan_visits(self) -> None:
-        '''people plan their visits'''
-        for person_id in range(6):
-            # which house to visit and how many days until visit happens 
-            house_to_visit, eta = self.agent_states[person_id].visit_decision(self.distance_matrix)
-
+        for person_id in range(self.num_people):
+            house_to_visit, eta = self.agents[person_id].visit_decision(self.distance_matrix)
             if not np.isnan(eta):
-                heapq.heappush(self.pending_visits, PendingVisit(self.timestamp + eta, person_id, house_to_visit))
-                logging.info(f'DAY {self.timestamp}: Pending visit added: arrival: {self.timestamp + eta}, person: {person_id + 1}, house: {house_to_visit + 1}')
+
+                self.agents[person_id].start_trip(house_to_visit)
+                heapq.heappush(self.trips, Trip(self.timestamp + eta, self.timestamp, person_id, self.agents[person_id].at, house_to_visit))
                 
-                start_trip_fact = ActionFact(self.timestamp, ActionType.START_TRIP, person_id + 1)
+                fact_metadata = {'from': self.agents[person_id].at + 1, 'to': house_to_visit + 1, 'start': self.timestamp, 'end': self.timestamp + eta}
+                start_trip_fact = ActionFact(self.timestamp, ActionType.START_TRIP, person_id + 1, fact_metadata)
 
                 self.add_facts(start_trip_fact)
-                self.agent_states[person_id].update_knowledge(start_trip_fact)
-                self.agent_states[person_id].traveling = True
+                self.agents[person_id].update_knowledge(start_trip_fact)
 
-    
     def day_visits(self) -> list[tuple[int, int]]:
-        # returns house people will be in (at i pos i house visitors)
-        house_visitors = []
-        for _ in range(6):
-            house_visitors.append([])
+        house_visitors = [[] for _ in range(self.num_people)]
 
-        for person_id in range(6):
-            if not self.agent_states[person_id].traveling:
-                house_visitors[self.agent_states[person_id].at].append(person_id)
-                logging.info(f'DAY {self.timestamp}: Person {person_id + 1} stays at house {self.agent_states[person_id].at + 1}')
+        for person_id in range(self.num_people):
+            if not self.agents[person_id].traveling:
+                house_visitors[self.agents[person_id].at].append(person_id)
 
-        while self.pending_visits and self.pending_visits[0].visit_day == self.timestamp:
-            cur_visit = heapq.heappop(self.pending_visits)
-            house_visitors[cur_visit.house_id].append(cur_visit.person_id)
+        while self.trips and self.trips[0].end_day == self.timestamp:
+            cur_trip = heapq.heappop(self.trips)
 
-            logging.info(f'DAY {self.timestamp}: Person {cur_visit.person_id + 1} came to house {cur_visit.house_id + 1}')
-            
-            end_trip_fact = ActionFact(self.timestamp, ActionType.CONCLUDE_TRIP, person_id)
+            self.agents[cur_trip.person_id].end_trip(cur_trip.house_to)
+            house_visitors[cur_trip.house_to].append(cur_trip.person_id)
+
+            fact_metadata = {'from': cur_trip.house_from + 1, 'to': cur_trip.house_to + 1, 'start': cur_trip.start_day, 'end': cur_trip.end_day}
+            end_trip_fact = ActionFact(self.timestamp, ActionType.END_TRIP, cur_trip.person_id + 1, fact_metadata)
+
             self.add_facts(end_trip_fact)
-            self.agent_states[person_id].update_knowledge(end_trip_fact)
-
-            self.agent_states[cur_visit.person_id].traveling = False
-            self.agent_states[cur_visit.person_id].destination = -1
-            self.agent_states[cur_visit.person_id].at = cur_visit.house_id
+            self.agents[cur_trip.person_id].update_knowledge(end_trip_fact)
             
         return house_visitors
-
     
-    def swap_house(self, person_1: int, person_2: int, person_3: int | None = None) -> tuple[int, int, int | None]:
-        # returns houses of id_1, id_2, id_3 after the swap
-        if not person_3:
-            house_temp = self.agent_states[person_1].state.house
-            self.agent_states[person_1].change_house(self.agent_states[person_2].state.house, self.timestamp)
-            self.agent_states[person_2].change_house(house_temp, self.timestamp)
+    def _get_swap_id_pairs(self, *ids: int):
+        return zip(ids, ids[1:] + ids[:1])
 
-            self.add_swap_information(ActionType.HOUSE_SWAP, person_1, person_2)
-
-        else:
-            # NOTE: how do 3 people choose who to swap with?
-            # clockwise or counterclockwise with equal probability 
-
-            if random.random() < 0.5: # clockwise (houses: 2 -> 0, 0 -> 1, 1 -> 2)
-                house_temp = self.agent_states[person_1].state.house # 0
-                self.agent_states[person_1].change_house(self.agent_states[person_3].state.house, self.timestamp) # 2 -> 0
-                self.agent_states[person_3].change_house(self.agent_states[person_2].state.house, self.timestamp) # 1 -> 2
-                self.agent_states[person_2].change_house(house_temp, self.timestamp) # 0 -> 1
-
-            else: # counterclockwise (houses: 1 -> 0, 2 -> 1, 0 -> 2)
-                house_temp = self.agent_states[person_1].state.house # 0
-                self.agent_states[person_1].change_house(self.agent_states[person_2].state.house, self.timestamp) # 1 -> 0
-                self.agent_states[person_2].change_house(self.agent_states[person_3].state.house, self.timestamp) # 2 -> 1
-                self.agent_states[person_3].change_house(house_temp, self.timestamp) # 0 -> 1
-
-            self.add_swap_information(ActionType.HOUSE_SWAP, person_1, person_2, person_3)
-
-
-    def add_swap_information(self, type: ActionType, person_1: int, person_2: int, person_3: int | None = None) -> None:
-        if not person_3:
-            swap_fact = ActionFact(self.timestamp, type, [person_1, person_2])
-
-            if type == ActionType.HOUSE_SWAP:
-                person1_fact = StaticFact(self.timestamp, person_id=person_1, house=self.agent_states[person_1].state.house)
-                person2_fact = StaticFact(self.timestamp, person_id=person_2, house=self.agent_states[person_2].state.house)
-            elif type == ActionType.PET_SWAP:
-                person1_fact = StaticFact(self.timestamp, person_id=person_1, pet=self.agent_states[person_1].state.pet)
-                person2_fact = StaticFact(self.timestamp, person_id=person_2, pet=self.agent_states[person_2].state.pet)
-
-            self.agent_states[person_1].update_knowledge(swap_fact, person1_fact, person2_fact)
-            self.agent_states[person_2].update_knowledge(swap_fact, person1_fact, person2_fact)
-
-            self.add_facts(swap_fact, person1_fact, person2_fact)
-
-        else:
-            swap_fact = ActionFact(self.timestamp, type, [person_1, person_2, person_3])
-
-            if type == ActionType.HOUSE_SWAP:
-                person1_fact = StaticFact(self.timestamp, person_id=person_1, house=self.agent_states[person_1].state.house)
-                person2_fact = StaticFact(self.timestamp, person_id=person_2, house=self.agent_states[person_2].state.house)
-                person3_fact = StaticFact(self.timestamp, person_id=person_3, house=self.agent_states[person_3].state.house)
-            elif type == ActionType.PET_SWAP:
-                person1_fact = StaticFact(self.timestamp, person_id=person_1, pet=self.agent_states[person_1].state.pet)
-                person2_fact = StaticFact(self.timestamp, person_id=person_2, pet=self.agent_states[person_2].state.pet)
-                person3_fact = StaticFact(self.timestamp, person_id=person_3, pet=self.agent_states[person_3].state.pet)
-
-            person1_fact = StaticFact(self.timestamp, person_id=person_1, house=self.agent_states[person_1].state.house)
-            person2_fact = StaticFact(self.timestamp, person_id=person_2, house=self.agent_states[person_2].state.house)
-            person3_fact = StaticFact(self.timestamp, person_id=person_3, house=self.agent_states[person_3].state.house)
-
-            self.agent_states[person_1].update_knowledge(swap_fact, person1_fact, person2_fact, person3_fact)
-            self.agent_states[person_2].update_knowledge(swap_fact, person1_fact, person2_fact, person3_fact)
-            self.agent_states[person_3].update_knowledge(swap_fact, person1_fact, person2_fact, person3_fact)
-
-            self.add_facts(swap_fact, person1_fact, person2_fact, person3_fact)
-
-        logging.info(f'DAY {self.timestamp}: {type.value} between {person_1, person_2, person_3}')
+        # take_from_ids = list(ids)
+        # while True:
+        #     random.shuffle(take_from_ids)
+        #     if all(giver != receiver for receiver, giver in zip(ids, take_from_ids)):
+        #         return zip(ids, take_from_ids)
             
+    def _add_swap_info(self, ids: tuple[int], swap_facts: list[ActionFact]) -> None:
+        self.add_facts(*swap_facts)
+        for id in ids:
+            self.agents[id].update_knowledge(*swap_facts)
 
-    def swap_pet(self, person_1: int, person_2: int, person_3: int | None = None) -> tuple[int, int, int | None]:
-        if not person_3:
-            pet_temp = self.agent_states[person_1].state.pet
-            self.agent_states[person_1].change_pet(self.agent_states[person_2].state.pet, self.timestamp)
-            self.agent_states[person_2].change_pet(pet_temp, self.timestamp)
+    def swap(self, type: ActionType, *ids):
+        removed_items = dict()
+        swap_facts = []
 
-            self.add_swap_information(ActionType.PET_SWAP, person_1, person_2)
-        else:
-            # NOTE: how do 3 people choose who to swap with?
-            # clockwise or counterclockwise with equal probability 
+        for receiver_id, giver_id in self._get_swap_id_pairs(*ids):
+            match type:
+                case ActionType.HOUSE_SWAP:
+                    prev_item = self.agents[receiver_id].state.house
+                    new_item = removed_items[giver_id] if giver_id in removed_items else self.agents[giver_id].state.house
+                case ActionType.PET_SWAP:
+                    prev_item = self.agents[receiver_id].state.pet
+                    new_item = removed_items[giver_id] if giver_id in removed_items else self.agents[giver_id].state.pet
+                case _:
+                    raise ValueError('Unknown swap type')
+                
+            removed_items[receiver_id] = prev_item
+            self.agents[receiver_id].swap(type, new_item, self.timestamp)
 
-            if random.random() < 0.5: # clockwise (pets: 2 -> 0, 0 -> 1, 1 -> 2)
-                pet_temp = self.agent_states[person_1].state.pet # 0
-                self.agent_states[person_1].change_pet(self.agent_states[person_3].state.pet, self.timestamp) # 2 -> 0
-                self.agent_states[person_3].change_pet(self.agent_states[person_2].state.pet, self.timestamp) # 1 -> 2
-                self.agent_states[person_2].change_pet(pet_temp, self.timestamp) # 0 -> 1
+            swap_facts.append(ActionFact(self.timestamp, type, (giver_id + 1, receiver_id + 1), {'from': giver_id + 1, 'to': receiver_id + 1, 'item': new_item}))
 
-            else: # counterclockwise (pets: 1 -> 0, 2 -> 1, 0 -> 2)
-                pet_temp = self.agent_states[person_1].state.pet # 0
-                self.agent_states[person_1].change_pet(self.agent_states[person_2].state.pet, self.timestamp) # 1 -> 0
-                self.agent_states[person_2].change_pet(self.agent_states[person_3].state.pet, self.timestamp) # 2 -> 1
-                self.agent_states[person_3].change_pet(pet_temp, self.timestamp) # 0 -> 1
-
-            self.add_swap_information(ActionType.PET_SWAP, person_1, person_2, person_3)
+        self._add_swap_info(ids, swap_facts)
 
     def process_house(self, house_id: int, *visitor_ids) -> None:
-        house_swappers = []
-        pet_swappers = []
 
-        for visitor in visitor_ids:
-            if self.agent_states[visitor].swap_pet:
-                pet_swappers.append(visitor)
+        self.add_facts(ActionFact(self.timestamp, ActionType.MEETING, tuple(v + 1 for v in visitor_ids), metadata={'house_at': house_id + 1}))
 
-            if self.agent_states[visitor].swap_house:
-                house_swappers.append(visitor)
-
-        logging.info(f'DAY {self.timestamp}: Processing house {house_id + 1}')
-        logging.info(f'DAY {self.timestamp}: Pet swappers at house {house_id + 1}: {[x + 1 for x in pet_swappers]}')
-        logging.info(f'DAY {self.timestamp}: House swappers at house {house_id + 1}: {[x + 1 for x in house_swappers]}')
-
+        house_swappers = [v for v in visitor_ids if self.agents[v].swap_house]
         if len(house_swappers) > 1:
-            self.swap_house(*house_swappers)
+            self.swap(ActionType.HOUSE_SWAP, *house_swappers)
+
+        pet_swappers = [v for v in visitor_ids if self.agents[v].swap_pet]
         if len(pet_swappers) > 1:
-            self.swap_pet(*pet_swappers)
+            self.swap(ActionType.PET_SWAP, *pet_swappers)
 
         self.house_processed[house_id] = True
+
+    def calc_awareness(self) -> None:
+        self.awareness.append(len(self.facts))
+        for i in range(self.num_people):
+            self.agent_awareness[i].append(len(self.agents[i].known_facts))
     
     def day(self) -> None:
-        logging.info(f'DAY {self.timestamp} BEGAN')
-
-        visits = self.day_visits() # who will be in which house
+        visits = self.day_visits() 
 
         if visits:
-            self.house_processed = [False] * 6
+            self.house_processed = [False] * self.num_people
 
-            for house_id in range(6):
-                logging.info(f'DAY {self.timestamp}: people {[v + 1 for v in visits[house_id]]} at house {house_id + 1}')
+            for house_id in range(self.num_people):
 
                 if len(visits[house_id]) < 2:
                     self.house_processed[house_id] = True
-                    continue # 0 or 1 person in house
+                    continue 
                 else:
                     self.process_house(house_id, *visits[house_id])
 
-        logging.info(f'BY THE END OF DAY {self.timestamp}')
-        for person_id in range(6):
-            logging.info(f'Person {person_id + 1} ' + self.agent_states[person_id].dynamic_state_repr)
-        logging.info(f'DAY {self.timestamp} ENDED')
-        logging.info('')
+        self.calc_awareness()
 
         self.timestamp += 1
         self.plan_visits()

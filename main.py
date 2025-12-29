@@ -7,5 +7,5 @@ NUM_DAYS = 10
 for day in range(NUM_DAYS):
     island.day()
 
-print('Simulation done!')
 island.print_facts()
+island.print_facts_for_log()

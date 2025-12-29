@@ -90,20 +90,20 @@ def parse_action_probabilities_from_row(row: dict) -> ActionProbabilities:
     """
     Parse a CSV row into ActionProbabilities
     """
-    visit_house = [
+    house_visit = np.array([
         float(row['1']) / 100.0,
         float(row['2']) / 100.0, 
         float(row['3']) / 100.0,
         float(row['4']) / 100.0,
         float(row['5']) / 100.0,
         float(row['6']) / 100.0
-    ]
+    ])
         
     swap_house = float(row['PHouseExch']) / 100.0
     swap_pet = float(row['PPetExch']) / 100.0
     
-    return  ActionProbabilities(
-        visit_house=visit_house,
+    return ActionProbabilities(
+        house_visit=house_visit,
         swap_house=swap_house,
         swap_pet=swap_pet
     )
