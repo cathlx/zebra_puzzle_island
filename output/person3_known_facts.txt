@@ -1,0 +1,4 @@
+ActionFact(timestamp=4, type=<ActionType.HOUSE_SWAP: 'house swap'>, actors=(3, 4), metadata={'from': 3, 'to': 4, 'item': House(id=3, color=<Color.YELLOW: 'Yellow'>)})
+ActionFact(timestamp=4, type=<ActionType.HOUSE_SWAP: 'house swap'>, actors=(4, 3), metadata={'from': 4, 'to': 3, 'item': House(id=4, color=<Color.GREEN: 'Green'>)})
+ActionFact(timestamp=4, type=<ActionType.PET_SWAP: 'pet swap'>, actors=(3, 4), metadata={'from': 3, 'to': 4, 'item': <Pet.ZEBRA: 'Zebra'>})
+ActionFact(timestamp=4, type=<ActionType.PET_SWAP: 'pet swap'>, actors=(4, 3), metadata={'from': 4, 'to': 3, 'item': <Pet.FISH: 'Fish'>})

@@ -28,32 +28,19 @@ class Island:
         for fact in facts:
             self.facts.append(fact)
         
-    def print_facts(self, filepath: str | None = None) -> None:
-        if filepath:
-            with open(filepath, 'w') as file:
-                for fact in self.facts:
-                    file.write(fact)
-        else:
+    def log_all_facts(self, filepath: str = 'output/island_facts.txt') -> None:
+        with open(filepath, 'w') as file:
             for fact in self.facts:
-                print(fact)
+                file.write(repr(fact))
+                file.write('\n')
 
-    def print_facts_for_log(self, filepath: str | None = None) -> None:
-        for fact in self.facts:
-            print('_'.join(fact.type.value.split()), end=' ')
-            match fact.type:
-                case ActionType.START_TRIP:
-                    print(fact.actors, *fact.metadata.values())
-                case ActionType.END_TRIP:
-                    print(fact.actors, *fact.metadata.values())
-                case ActionType.MEETING:
-                    print(fact.timestamp, fact.metadata['house_at'], *fact.actors)
-                case ActionType.HOUSE_SWAP:
-                    print(fact.timestamp, *fact.metadata.values())
-                case ActionType.PET_SWAP:
-                    print(fact.timestamp, *fact.metadata.values())
-                case ActionType.INFORMATION_EXCHANGE:
-                    continue
-    
+    def log_known_facts(self, filepath: str = f'output/') -> None:
+        for i in range(len(self.agents)):
+            with open(filepath + f'person{i}_known_facts.txt', 'w') as file:
+                for fact in self.agents[i].known_facts:
+                    file.write(repr(fact))
+                    file.write('\n')
+
     def plan_visits(self) -> None:
         for person_id in range(self.num_people):
             house_to_visit, eta = self.agents[person_id].visit_decision(self.distance_matrix)
@@ -159,6 +146,8 @@ class Island:
                     self.process_house(house_id, *visits[house_id])
 
         self.calc_awareness()
+        for agent in self.agents:
+            self.add_facts(StaticFact(self.timestamp, *agent.state))
 
         self.timestamp += 1
         self.plan_visits()

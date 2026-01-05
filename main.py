@@ -7,5 +7,5 @@ NUM_DAYS = 10
 for day in range(NUM_DAYS):
     island.day()
 
-island.print_facts()
-island.print_facts_for_log()
+island.log_all_facts()
+island.log_known_facts()

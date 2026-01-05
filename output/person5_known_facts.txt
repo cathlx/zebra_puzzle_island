@@ -1,0 +1,5 @@
+ActionFact(timestamp=1, type=<ActionType.START_TRIP: 'start trip'>, actors=6, metadata={'from': 6, 'to': 5, 'start': 1, 'end': 3})
+ActionFact(timestamp=3, type=<ActionType.END_TRIP: 'end trip'>, actors=6, metadata={'from': 6, 'to': 5, 'start': 1, 'end': 3})
+ActionFact(timestamp=7, type=<ActionType.START_TRIP: 'start trip'>, actors=6, metadata={'from': 5, 'to': 6, 'start': 7, 'end': 9})
+ActionFact(timestamp=9, type=<ActionType.END_TRIP: 'end trip'>, actors=6, metadata={'from': 5, 'to': 6, 'start': 7, 'end': 9})
+ActionFact(timestamp=10, type=<ActionType.START_TRIP: 'start trip'>, actors=6, metadata={'from': 6, 'to': 5, 'start': 10, 'end': 12})
