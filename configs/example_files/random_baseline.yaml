@@ -1,0 +1,38 @@
+experiment_name: 'random_baseline'
+description: 'Settings from example files'
+
+input:
+  people_states: 'configs/island_schemas/people.csv'
+  action_probs: 'configs/island_schemas/actions.csv'
+  distance_matrix: 'configs/island_schemas/distances.csv'
+
+simulation:
+  num_agents: 6
+  num_days: 500
+  random_seed: 42
+  verbose: false
+
+strategies:
+  mandatory_return: false
+  visit_strategies:
+    0: 'random'
+    1: 'random'
+    2: 'random'
+    3: 'random'
+    4: 'random'
+    5: 'random'
+
+output:
+  directory: 'results'
+  save_interval: 5
+  save_final_state: true
+
+metrics:
+  tracked:
+    - 'total_awareness'
+    - 'agent1_awareness'
+    - 'agent2_awareness'
+    - 'agent3_awareness'
+    - 'agent4_awareness'
+    - 'agent5_awareness'
+    - 'agent6_awareness'

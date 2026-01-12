@@ -1,0 +1,135 @@
+experiment_name: all_random_gen
+experiment_id: '20260112_174804'
+num_days: 300
+tracked_metrics:
+- total_awareness
+- agent1_awareness
+- agent2_awareness
+- agent3_awareness
+- agent4_awareness
+- agent5_awareness
+- agent6_awareness
+num_people: 6
+agents:
+- id: 1
+  house_color: Green
+  nationality: German
+  drink: Whiskey
+  cigarettes: Pall Mall
+  pet: Cat
+  action_probs:
+    house_visit:
+      1: 0.15
+      2: 0.38
+      3: 0.06
+      4: 0.18
+      5: 0.22
+      6: 0.01
+    swap_house: 0.61
+    swap_pet: 0.17
+  strategy: Random
+  pheromone_deposit: 1.0
+- id: 2
+  house_color: Blue
+  nationality: Russian
+  drink: Beer
+  cigarettes: Dunhill
+  pet: Fish
+  action_probs:
+    house_visit:
+      1: 0.08
+      2: 0.5
+      3: 0.22
+      4: 0.15
+      5: 0.03
+      6: 0.03
+    swap_house: 0.06
+    swap_pet: 0.87
+  strategy: Random
+  pheromone_deposit: 1.0
+- id: 3
+  house_color: Yellow
+  nationality: Chinese
+  drink: Juice
+  cigarettes: Kent
+  pet: Zebra
+  action_probs:
+    house_visit:
+      1: 0.12
+      2: 0.24
+      3: 0.18
+      4: 0.11
+      5: 0.3
+      6: 0.05
+    swap_house: 0.29
+    swap_pet: 0.37
+  strategy: Random
+  pheromone_deposit: 1.0
+- id: 4
+  house_color: White
+  nationality: French
+  drink: Water
+  cigarettes: Camel
+  pet: Dog
+  action_probs:
+    house_visit:
+      1: 0.01
+      2: 0.35
+      3: 0.4
+      4: 0.19
+      5: 0.04
+      6: 0.01
+    swap_house: 0.68
+    swap_pet: 0.44
+  strategy: Random
+  pheromone_deposit: 1.0
+- id: 5
+  house_color: Red
+  nationality: American
+  drink: Vodka
+  cigarettes: Parlament
+  pet: Bear
+  action_probs:
+    house_visit:
+      1: 0.03
+      2: 0.15
+      3: 0.01
+      4: 0.52
+      5: 0.06
+      6: 0.23
+    swap_house: 0.31
+    swap_pet: 0.52
+  strategy: Random
+  pheromone_deposit: 1.0
+- id: 6
+  house_color: Black
+  nationality: English
+  drink: Wine
+  cigarettes: Marlboro
+  pet: Hamster
+  action_probs:
+    house_visit:
+      1: 0.12
+      2: 0.16
+      3: 0.0
+      4: 0.46
+      5: 0.23
+      6: 0.03
+    swap_house: 0.18
+    swap_pet: 0.18
+  strategy: Random
+  pheromone_deposit: 1.0
+mandatory_return: false
+distance_matrix: '[0.0, nan, nan, 2.0, 3.0, 2.0]
+
+  [nan, 0.0, 2.0, 3.0, 1.0, nan]
+
+  [nan, 2.0, 0.0, 2.0, 3.0, nan]
+
+  [2.0, 3.0, 2.0, 0.0, 3.0, 2.0]
+
+  [3.0, 1.0, 3.0, 3.0, 0.0, nan]
+
+  [2.0, nan, nan, 2.0, nan, 0.0]'
+aco:
+  exp_decay_time: 7
