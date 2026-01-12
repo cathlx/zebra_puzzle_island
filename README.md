@@ -21,10 +21,10 @@ scripts/
 ├── experiments.py                 # Experiment management
 ├── main.py                        # Main entry point (WIP)
 ├── setting.py                     # Simulation setup
-└── src/                           # Core simulation modules
-    ├── agent.py                   # Agent implementation
-    ├── island.py                  # Island environment
-    └── schemas.py                 # Data schemas
+src/                               # Core simulation modules
+├── agent.py                       # Agent implementation
+├── island.py                      # Island environment
+└── schemas.py                     # Data schemas
 
 notebooks/
 ├── tryouts.ipynb                  # Experimental notebooks
