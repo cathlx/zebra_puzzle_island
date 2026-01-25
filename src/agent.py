@@ -96,6 +96,7 @@ class Agent:
 
     def change_house(self, house: House, timestamp: int):
         self.state.house = house
+        self.must_return = True
         # self.update_knowledge(StaticFact(timestamp, *self.state))
 
     def change_pet(self, pet: Pet, timestamp: int):

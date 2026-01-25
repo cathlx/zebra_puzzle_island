@@ -165,7 +165,7 @@ class Island:
 
             swap_facts.append(ActionFact(self.timestamp, type, (giver_id + 1, receiver_id + 1), {'from': giver_id + 1, 'to': receiver_id + 1, 'item': new_item}))
 
-        self._add_facts_all(ids, swap_facts)
+        self._add_facts_all(ids, *swap_facts)
 
     # AWARENESS
 
@@ -197,6 +197,7 @@ class Island:
 
         # for agent in self.agents:
         #     self.add_facts(StaticFact(self.timestamp, *agent.state))
+        self.log_known_facts()
 
         self.timestamp += 1
         self.plan_next_visits()

@@ -1,0 +1,42 @@
+experiment_name: 'mandatory_return_random_gen'
+description: 'Use randomly generated settings to investigate mandatory return strategy'
+
+input:
+  people_states: 'results/all_random_gen_20260112_174804/island_schemas/people.csv'
+  action_probs: 'results/all_random_gen_20260112_174804/island_schemas/actions.csv'
+  distance_matrix: 'results/all_random_gen_20260112_174804/island_schemas/distances.csv'
+
+simulation:
+  num_agents: 6
+  num_days: 300
+  random_seed: 42
+  verbose: false
+
+strategies:
+  mandatory_return: false
+  visit_strategies:
+    1: 'random'
+    2: 'random'
+    3: 'random'
+    4: 'random'
+    5: 'random'
+    6: 'random'
+
+aco:
+  pheromone_deposit: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+  exp_time_decay: 7.0
+
+output:
+  directory: 'results'
+  save_interval: 5
+  save_final_state: true
+
+metrics:
+  tracked:
+    - 'total_awareness'
+    - 'agent1_awareness'
+    - 'agent2_awareness'
+    - 'agent3_awareness'
+    - 'agent4_awareness'
+    - 'agent5_awareness'
+    - 'agent6_awareness'

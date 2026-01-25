@@ -101,14 +101,16 @@ def create_agents(person_states: list[PersonState],
 def create_island(people_csv: str | None = None, 
                   actions_csv: str | None = None, 
                   distance_csv: str | None = None, 
-                  strategy: str = 'random',
-                  mandatory_return: bool = False) -> Island:
+                  strategies: dict[str] = {i : 'random' for i in range(1, 7)},
+                  mandatory_return: bool = False,
+                  verbose: bool = False,
+                  ) -> Island:
     states = get_agent_states(people_csv)
     probs = get_action_probs(actions_csv)
-    strategies = get_visit_strategies(strategy)
+    strategies = get_visit_strategies(strategies)
     agents = create_agents(states, probs, strategies)
     distance_matrix = get_distance_matrix(distance_csv)
-    return Island(agents, distance_matrix, mandatory_return)
+    return Island(agents, distance_matrix, mandatory_return, verbose)
 
 def get_island_from_cfg(cfg: Config, save_csv: bool = False) -> Island:
     states = get_agent_states(cfg.input.people_states)
